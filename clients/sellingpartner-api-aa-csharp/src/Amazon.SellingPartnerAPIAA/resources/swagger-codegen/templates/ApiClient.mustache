@@ -20,7 +20,6 @@ using RestSharp.Portable.HttpClient;
 {{/netStandard}}
 {{^netStandard}}
 using RestSharp;
-using RestSharp.Extensions;
 {{/netStandard}}
 using Amazon.SellingPartnerAPIAA;
 using RateLimiter;
@@ -49,24 +48,6 @@ namespace {{packageName}}.Client
         /// <param name="request">The RestSharp request object</param>
         private void InterceptRequest(IRestRequest request)
         {
-            if (RestClient.BaseUrl != null)
-            {
-                UriBuilder uriBuilder = new UriBuilder(RestClient.BaseUrl);
-                IEnumerable<Parameter> urlSegments = request.Parameters.Where(p => p.Type == ParameterType.UrlSegment && p.Value != null);
-                foreach (Parameter urlSegment in urlSegments)
-                {
-                    if (!string.IsNullOrWhiteSpace(request.Resource))
-                    {
-                        request.Resource = request.Resource.Replace("{" + urlSegment.Name + "}", urlSegment.Value.ToString());
-                    }
-                    if (!string.IsNullOrWhiteSpace(uriBuilder.Path))
-                    {
-                        uriBuilder.Path = uriBuilder.Path.UrlDecode().Replace("{" + urlSegment.Name + "}", urlSegment.Value.ToString().UrlEncode());
-                    }
-                }
-                RestClient.BaseUrl = new Uri(uriBuilder.ToString());
-            }
-            
             lwaAuthorizationSigner.Sign(request);
             awsSigV4Signer.Sign(request, RestClient.BaseUrl.Host);
         }

@@ -24,7 +24,7 @@ namespace Amazon.SellingPartnerAPIAA
                 }
                 else
                 {
-                    encoded.Append("%").Append(string.Format(CultureInfo.InvariantCulture, "{0:X2}", (int)symbol));
+                    encoded.Append("%").Append(string.Format(CultureInfo.InvariantCulture, "{0:X2}", new[] { (int)symbol }));
                 }
             }
             return encoded.ToString();

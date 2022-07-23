@@ -345,7 +345,14 @@ namespace {{packageName}}.Client
             // at this point, it must be a model (json)
             try
             {
-                return JsonConvert.DeserializeObject(response.Content, type, serializerSettings);
+                if (type == typeof(GetOrderItemsResponse))
+                {
+                    return JsonConvert.DeserializeObject(response.Content.Replace("Amazon Services, Inc.", "AmazonServicesInc"), type, serializerSettings);
+                }
+                else
+                {
+                    return JsonConvert.DeserializeObject(response.Content, type, serializerSettings);
+                }
             }
             catch (Exception e)
             {
